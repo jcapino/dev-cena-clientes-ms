@@ -1,0 +1,22 @@
+# Servidor
+server:
+  servlet:
+    context-path: /cenaclientesms/
+
+# Spring Config
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/evalart_reto
+    username: root
+    password: ENC(eEzCgrmv5pXCW104O+0SWNKz9SjWMeTF)
+    driver-class-name: com.mysql.cj.jdbc.Driver
+flyway:
+  url: jdbc:h2:mem:evalart_reto
+  user: root
+  password: ENC(eEzCgrmv5pXCW104O+0SWNKz9SjWMeTF)
+  schemas: evalart_reto
+  baseline-on-migrate: true
+
+# WebService - Desencriptar
+url:
+  desencriptar: https://test.evalartapp.com/extapiquest/code_decrypt/%s

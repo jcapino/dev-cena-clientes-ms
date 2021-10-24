@@ -1,6 +1,5 @@
 package co.com.pruebabancolombia.cenaclientesms.service.impl.cena;
 
-import co.com.pruebabancolombia.cenaclientesms.dao.declaration.RepositorioAccount;
 import co.com.pruebabancolombia.cenaclientesms.dao.declaration.RepositorioClient;
 import co.com.pruebabancolombia.cenaclientesms.model.client.Client;
 import co.com.pruebabancolombia.cenaclientesms.model.invitado.CriteriosSeleccion;
@@ -27,7 +26,7 @@ public class SeleccionarInvitadosService {
     private final int FEMENINO = 0;
     private final int MASCULINO = 1;
 
-    public SeleccionarInvitadosService(CriteriosSeleccionService criteriosSeleccionService, DesencriptarService desencriptarService, RepositorioClient repositorioClient ) {
+    public SeleccionarInvitadosService(CriteriosSeleccionService criteriosSeleccionService, DesencriptarService desencriptarService, RepositorioClient repositorioClient) {
         this.criteriosSeleccionService = criteriosSeleccionService;
         this.desencriptarService = desencriptarService;
         this.repositorioClient = repositorioClient;
@@ -64,16 +63,16 @@ public class SeleccionarInvitadosService {
     private List<Grupo> validarInvitacionesGrupos(List<Grupo> gruposPreseleccionados) {
         return gruposPreseleccionados.stream()
                 .map(grupoPreseleccionado -> {
-            var clientes = validarYObtenerClientesInvitados(grupoPreseleccionado.getClientes());
-            grupoPreseleccionado.setClientes(clientes);
+                    var clientes = validarYObtenerClientesInvitados(grupoPreseleccionado.getClientes());
+                    grupoPreseleccionado.setClientes(clientes);
 
-            if (grupoPreseleccionado.getClientes().size() >= NUMERO_CLIENTES_MIN_X_MESA) {
-                grupoPreseleccionado.setEstado(EstadoGrupo.INVITADO);
-            } else {
-                grupoPreseleccionado.setEstado(EstadoGrupo.CANCELADA);
-            }
-            return grupoPreseleccionado;
-        }).toList();
+                    if (grupoPreseleccionado.getClientes().size() >= NUMERO_CLIENTES_MIN_X_MESA) {
+                        grupoPreseleccionado.setEstado(EstadoGrupo.INVITADO);
+                    } else {
+                        grupoPreseleccionado.setEstado(EstadoGrupo.CANCELADA);
+                    }
+                    return grupoPreseleccionado;
+                }).toList();
     }
 
     private List<Client> validarYObtenerClientesInvitados(List<Client> clientesPreseleccionados) {
@@ -134,12 +133,15 @@ public class SeleccionarInvitadosService {
         List<Client> clientesMasculinos = new ArrayList<>(clientes);
 
         if (clientesMasculinos.size() > 1) {
-            clientesMasculinos.sort(Comparator.comparing(Client::getBalance));
+            clientesMasculinos.sort(Comparator.comparing(Client::getBalance).reversed());
         }
-
+        var ref = new Object() {
+            int contador = 1;
+        };
         clientesMasculinos.stream().forEach(cliente -> {
-            if (clientesInvitados.size() < numClientexGenero) {
+            if (ref.contador <= numClientexGenero) {
                 clientesInvitados.add(cliente);
+                ref.contador++;
             }
         });
 
@@ -148,14 +150,17 @@ public class SeleccionarInvitadosService {
                 .toList();
         List<Client> clientesFemeninos = new ArrayList<>(clientes);
         if (clientesFemeninos.size() > 1) {
-            clientesFemeninos.sort(Comparator.comparing(Client::getBalance));
+            clientesFemeninos.sort(Comparator.comparing(Client::getBalance).reversed());
         }
 
+        ref.contador = 1;
         clientesFemeninos.stream().forEach(cliente -> {
-            if (clientesInvitados.size() < numClientexGenero) {
+            if (ref.contador <= numClientexGenero) {
                 clientesInvitados.add(cliente);
+                ref.contador++;
             }
         });
+        clientesInvitados.sort(Comparator.comparing(Client::getBalance).reversed());
         return clientesInvitados;
     }
 
@@ -170,11 +175,11 @@ public class SeleccionarInvitadosService {
             } else {
 
                 grupo.getClientes().stream().forEach(cliente -> {
-                    if(cliente.getEncrypt() == 1){
+                    if (cliente.getEncrypt() == 1) {
                         resultStringBuilder.append(
                                 desencriptarService.ejecutar(cliente.getCode())
                         ).append(",");
-                    }else{
+                    } else {
                         resultStringBuilder.append(cliente.getCode()).append(",");
                     }
                 });

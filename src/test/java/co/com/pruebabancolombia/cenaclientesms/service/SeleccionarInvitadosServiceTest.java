@@ -42,7 +42,7 @@ public class SeleccionarInvitadosServiceTest {
 
     public String obtenerResultadoEsperado(){
         return "<General>\n" +
-                "CANCELADA\n" +
+                "C10039,C10129,C10105,C10126,C10091,C10051\n" +
                 "<Mesa 1>\n" +
                 "C10078,C10086,C10025,C10089,C10190,C10191,C10043,C10104\n" +
                 "<Mesa 2>\n" +
@@ -54,6 +54,6 @@ public class SeleccionarInvitadosServiceTest {
                 "<Mesa 5>\n" +
                 "C10201,C10202,C10203,C10204,C10205,C10206,C10207,C10208\n" +
                 "<Mesa 6>\n" +
-                "CANCELADA\n";
+                "C10186,C10116,C10088,C10169,C10209,C10178\n";
     }
 }
